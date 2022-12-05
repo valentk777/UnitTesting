@@ -6,6 +6,7 @@ namespace Prime.UnitTests.Services
 {
     public class FileServiceTests
     {
+        // Path is not working, ask why
         private string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         [Fact]
@@ -41,6 +42,33 @@ namespace Prime.UnitTests.Services
             // Act
             // Assert
             Assert.Throws<FileNotFoundException>(() => fileService.GetNumber("NotExistingFilePath"));
+        }
+
+        // Need answer for a question for this
+        [Fact]
+        public void SaveNumber_PassInvalidFileName_TrowException() 
+        {
+            // Arrange
+            var fileService = new FileService();
+            var fileContent = true;
+
+            // Act
+            //Assert
+            Assert.Throws<FileNotFoundException>(() => fileService.SaveNumber("NotExistingFilePath", fileContent));
+        }
+
+        [Fact]
+        public void SaveNumber_FileIsCreated_ResultTrue() 
+        {
+            // Arrange
+            var fileService = new FileService();
+            var fileContent = true;
+
+            // Act
+            fileService.SaveNumber(Path.Join(BasePath, "tests-create-file.txt"), fileContent);
+
+            // Assert
+            Assert.True(File.Exists(Path.Join(BasePath, "tests-create-file.txt")));
         }
     }
 }

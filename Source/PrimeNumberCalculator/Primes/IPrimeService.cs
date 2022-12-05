@@ -1,6 +1,6 @@
 ﻿namespace PrimeNumberCalculator.Primes
 {
-    interface IPrimeService
+    public interface IPrimeService
     {
         public bool IsPrime(int? candidate);
     }
