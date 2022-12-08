@@ -1,10 +1,10 @@
 ﻿namespace PrimeNumberCalculator.Primes
 {
-    public class PrimeService : IPrimeService
+    public class PrimeServiceSlow : IPrimeService
     {
-        public PrimeService()
+        public PrimeServiceSlow()
         {
-            Console.WriteLine("PrimeService");
+            Console.WriteLine("PrimeServiceSlow");
         }
 
         public bool IsPrime(int? candidate)
@@ -14,7 +14,7 @@
                 return false;
             }
 
-            for (var divisor = 2; divisor <= Math.Sqrt(candidate.Value); divisor++)
+            for (var divisor = 2; divisor < candidate.Value; divisor++)
             {
                 if (candidate % divisor == 0)
                 {

@@ -1,12 +1,29 @@
-﻿namespace PrimeNumberCalculator
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PrimeNumberCalculator.Files;
+using PrimeNumberCalculator.Primes;
+
+namespace PrimeNumberCalculator
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // TODO: Re-write to use depencenty injection
-            var primeNumberCalculator = new PrimeNumberCalculator();
-            primeNumberCalculator.Run();
+            var host = Host
+                .CreateDefaultBuilder(args)
+                .ConfigureServices((context, services) =>
+                    {
+                        services.AddTransient<PrimeNumberCalculator>();
+                        services.AddSingleton<FileService>();
+                        services.AddSingleton<IPrimeService, PrimeService>();
+                        services.AddSingleton<IPrimeService, PrimeServiceSlow>();
+                        //services.AddScoped<PrimeNumberCalculator>();
+                    })
+                .Build();
+
+            var primeNumberCalculator = host.Services.GetRequiredService<PrimeNumberCalculator>();
+
+            host.Run();
         }
     }
 }

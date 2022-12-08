@@ -37,10 +37,25 @@ namespace Prime.UnitTests.Services
         {
             // Arrange
             var fileService = new FileService();
+            var nonExistingFilePath = Guid.NewGuid().ToString();
 
             // Act
             // Assert
-            Assert.Throws<FileNotFoundException>(() => fileService.GetNumber("NotExistingFilePath"));
+            Assert.Throws<FileNotFoundException>(() => fileService.GetNumber(nonExistingFilePath));
+        }
+
+        [Fact]
+        public void SaveNumber_FileIsCreated_ResultTrue()
+        {
+            // Arrange
+            var fileService = new FileService();
+            var fileContent = true;
+
+            // Act
+            fileService.SaveNumber(Path.Join(BasePath, "tests-create-file.txt"), 7, fileContent);
+
+            // Assert
+            Assert.True(File.Exists(Path.Join(BasePath, "tests-create-file.txt")));
         }
     }
 }

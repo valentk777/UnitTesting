@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Prime.UnitTests.Services
 {
-    public class PrimeServiceSlowTests
+    public class PrimeServiceTests
     {
         [Theory]
         [InlineData(-1)]
@@ -12,7 +12,7 @@ namespace Prime.UnitTests.Services
         public void IsPrime_InputEdgeCasesNotPrime_ReturnFalse(int number)
         {
             // Arrange
-            var primeService = new PrimeServiceSlow();
+            var primeService = new PrimeService();
             
             // Act
             bool result = primeService.IsPrime(number);
@@ -28,7 +28,7 @@ namespace Prime.UnitTests.Services
         public void IsPrime_InputNotPrimeNumber_ReturnFalse(int number)
         {
             // Arrange
-            var primeService = new PrimeServiceSlow();
+            var primeService = new PrimeService();
 
             // Act
             bool result = primeService.IsPrime(number);
@@ -41,7 +41,7 @@ namespace Prime.UnitTests.Services
         public void IsPrime_InputNotPrimeNumber_ThrowsException()
         {
             // Arrange
-            var primeService = new PrimeServiceSlow();
+            var primeService = new PrimeService();
 
             // Act
             bool result = primeService.IsPrime(null);
