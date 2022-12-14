@@ -5,6 +5,8 @@ using Moq;
 
 namespace PrimeNumberCalculator.Tests
 {
+    // TODO: write tests for all possible logical combinations (~7 or 8 in total)
+    // You can use all the Xunit and the Moq features you know and fit in this exercise. 
     public class PrimeNumberCalculatorTests
     {
         // If you mock actual class, you get runtime exception. Why?
