@@ -1,16 +1,7 @@
-﻿using System.Diagnostics.Metrics;
-
-namespace PrimeNumberCalculator.Files
+﻿namespace PrimeNumberCalculator.Files
 {
     public class FileService : IFileService
     {
-        public string PropertyForTesting { get; set; }
-
-        public FileService()
-        {
-            Console.WriteLine("FileService");
-        }
-
         public int GetNumber(string fileName)
         {
             ThrowIfFileNotExist(fileName);

@@ -2,11 +2,6 @@
 {
     public class PrimeService : IPrimeService
     {
-        public PrimeService()
-        {
-            Console.WriteLine("PrimeService");
-        }
-
         public bool IsPrime(int? candidate)
         {
             if (candidate == null || candidate < 2)

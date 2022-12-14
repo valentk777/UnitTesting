@@ -1,6 +1,5 @@
 ﻿using PrimeNumberCalculator.Files;
 using PrimeNumberCalculator.Primes;
-using System.Reflection;
 using Xunit;
 using Moq;
 
@@ -8,26 +7,75 @@ namespace PrimeNumberCalculator.Tests
 {
     public class PrimeNumberCalculatorTests
     {
-        // TODO: add tests here
-        private string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        // If you mock actual class, you get runtime exception. Why?
+        // MOQ creates an implementation of the mocked type.
+        // If the type is an interface, it creates a class that implements the interface.
+        // If the type is a class, it creates an inherited class, and the members of that
+        // inherited class call the base class. But in order to do that it has to override
+        // the members. If a class has members that can't be overridden
+        // (they aren't virtual, abstract) then MOQ can't override them to add its own behaviors.
+        // Source: https://stackoverflow.com/questions/56905578/moq-non-overridable-members-may-not-be-used-in-setup-verification-expression
 
         [Fact]
-        public void Run_StartTheProgramm_AllMethodsAreSuccesfull()
+        public void PrimeNumberCalculator_Run_WithLowPrimeNumber()
         {
             // Arrange
-            var fileService = new FileService();
-            var primeService = new PrimeService();
-            var primeNumberCalculator = new PrimeNumberCalculator(fileService, primeService);
+            var fileServiceMock = new Mock<IFileService>();
+            var primeServiceMock = new Mock<IPrimeService>();
+            var numberFromFile = 5;
+            var isPrimeNumberAnswer = true;
 
-            var fileContent = false;
+            fileServiceMock
+                .Setup(x => x.GetNumber(It.IsAny<string>()))
+                .Returns(numberFromFile);
+
+            fileServiceMock
+                .Setup(x => x.SaveNumber(It.IsAny<string>(), numberFromFile, isPrimeNumberAnswer));
+
+            primeServiceMock
+                .Setup(x => x.IsPrime(numberFromFile))
+                .Returns(isPrimeNumberAnswer);
+
+            var primeNumberCalculator = new PrimeNumberCalculator(fileServiceMock.Object, primeServiceMock.Object);
 
             // Act
-            primeNumberCalculator.Run();
+            primeNumberCalculator.Run(It.IsAny<string>());
 
             // Assert
-            Assert.False(primeService.IsPrime(1000));
-            Assert.Equal(1000, fileService.GetNumber(Path.Join(BasePath, "tests-number.txt")));
-            Assert.True(File.Exists(Path.Join(BasePath, "tests-create-file.txt")));
+            fileServiceMock.Verify(x => x.GetNumber(It.IsAny<string>()), Times.Once);
+            primeServiceMock.Verify(x => x.IsPrime(It.IsAny<int>()), Times.Never);
+            fileServiceMock.Verify(x => x.SaveNumber(It.IsAny<string>(), numberFromFile, isPrimeNumberAnswer), Times.Never);
+        }
+
+        [Fact]
+        public void PrimeNumberCalculator_Run_WithBigNotPrimeNumber()
+        {
+            // Arrange
+            var fileServiceMock = new Mock<IFileService>();
+            var primeServiceMock = new Mock<IPrimeService>();
+            var numberFromFile = 52;
+            var isPrimeNumberAnswer = false;
+
+            fileServiceMock
+                .Setup(x => x.GetNumber(It.IsAny<string>()))
+                .Returns(numberFromFile);
+
+            fileServiceMock
+                .Setup(x => x.SaveNumber(It.IsAny<string>(), numberFromFile, isPrimeNumberAnswer));
+
+            primeServiceMock
+                .Setup(x => x.IsPrime(numberFromFile))
+                .Returns(isPrimeNumberAnswer);
+
+            var primeNumberCalculator = new PrimeNumberCalculator(fileServiceMock.Object, primeServiceMock.Object);
+
+            // Act
+            primeNumberCalculator.Run(It.IsAny<string>());
+
+            // Assert
+            fileServiceMock.Verify(x => x.GetNumber(It.IsAny<string>()), Times.Once);
+            primeServiceMock.Verify(x => x.IsPrime(It.IsAny<int>()), Times.Once);
+            fileServiceMock.Verify(x => x.SaveNumber(It.IsAny<string>(), numberFromFile, isPrimeNumberAnswer), Times.Once);
         }
     }
 }

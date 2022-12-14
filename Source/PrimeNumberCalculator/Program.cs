@@ -17,13 +17,13 @@ namespace PrimeNumberCalculator
                         services.AddSingleton<FileService>();
                         services.AddSingleton<IPrimeService, PrimeService>();
                         services.AddSingleton<IPrimeService, PrimeServiceSlow>();
-                        //services.AddScoped<PrimeNumberCalculator>();
+                        // Note: note that scoped option exist.
+                        // services.AddScoped<PrimeNumberCalculator>();
                     })
                 .Build();
 
             var primeNumberCalculator = host.Services.GetRequiredService<PrimeNumberCalculator>();
-
-            host.Run();
+            primeNumberCalculator.Run();
         }
     }
 }

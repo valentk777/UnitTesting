@@ -2,11 +2,6 @@
 {
     public class PrimeServiceSlow : IPrimeService
     {
-        public PrimeServiceSlow()
-        {
-            Console.WriteLine("PrimeServiceSlow");
-        }
-
         public bool IsPrime(int? candidate)
         {
             if (candidate == null || candidate < 2)
